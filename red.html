@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+  <title>pico.red.js</title>
+  <style>
+    /*
+    canvas {
+      width: 640px;
+      height: 360px;
+      border: 1px solid black;
+    }
+    */
+  </style>
+</head>
+<body>
+  <h1>pico.red.js</h1>
+
+  <!-- canvas size MUST depends on myCamvas mode -->
+  <canvas width='640' height='480'></canvas>
+  <canvas></canvas>
+  <ol>
+    <li>Render webcam on left canvas</li>
+    <li>Clone left to right canvas by Canvas2Canvas</li>
+    <li>Inject Canvas2Canvas draw function by pico.red</li>
+  </ol>
+
+  <!-- require libs -->
+  <script src='https://tkv.io/posts/picojs-intro/demo/pico.js'></script>
+  <script src='https://diewland.github.io/camvas/javascripts/camvas.js'></script>
+  <script src='https://diewland.github.io/any2canvas/canvas2canvas.js'></script>
+  <script src='./pico.red.js'></script>
+
+  <!-- play pico.red -->
+  <script src='./pico.red.js'></script>
+  <script>
+
+      // render some video to canvas
+      var ctx = document.querySelector('canvas').getContext('2d');
+      var draw = function(video, dt, cmv) { cmv.draw_img_stretch(ctx); }
+      var myCamvas = new camvas(ctx, draw, { mode: 'vga' });
+
+      // clone canvas A to canvas B
+      // using pico red to inject draw function
+      var pr = new PicoRed();
+      var c2c = new Canvas2Canvas({
+        draw_fn: pr.draw_fn,
+      });
+
+  </script>
+</body>
+</html>
