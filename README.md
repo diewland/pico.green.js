@@ -55,6 +55,10 @@ Camvas build-in
 | draw_video_fn      | run every frame: Draw video on canvas | Function | basic draw |                               |
 | end_of_frame_fn    | run every frame: After filter faces   | Function |            |                               |
 
+## Demo
+
+[Green](https://diewland.github.io/pico.green.js), [Red](https://diewland.github.io/pico.green.js/red.html)
+
 ## TODO
 * camvas, fps support
 * add more examples
