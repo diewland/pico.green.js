@@ -55,4 +55,5 @@ Camvas build-in
 | end_of_frame_fn    | run every frame: After filter faces   | Function |            |                               |
 
 ## TODO
+* camvas, fps support
 * add more examples

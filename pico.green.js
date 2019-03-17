@@ -45,101 +45,98 @@ function PicoGreen(options){
     draw_style(ctx, color);
   }
 
-  // pico x camvas
-  this.init = function(){
-    /*
-      (1) prepare the pico.js face detector
-    */
-    var update_memory = pico.instantiate_detection_memory(5); // we will use the detecions of the last 5 frames
-    var facefinder_classify_region = function(r, c, s, pixels, ldim) {return -1.0;};
-    fetch(cascade_url).then(function(response) {
-      response.arrayBuffer().then(function(buffer) {
-        var bytes = new Int8Array(buffer);
-        facefinder_classify_region = pico.unpack_cascade(bytes);
-        console.log('* cascade loaded');
-      })
+  /*
+    (1) prepare the pico.js face detector
+  */
+  var update_memory = pico.instantiate_detection_memory(5); // we will use the detecions of the last 5 frames
+  var facefinder_classify_region = function(r, c, s, pixels, ldim) {return -1.0;};
+  fetch(cascade_url).then(function(response) {
+    response.arrayBuffer().then(function(buffer) {
+      var bytes = new Int8Array(buffer);
+      facefinder_classify_region = pico.unpack_cascade(bytes);
+      console.log('* cascade loaded');
     })
-    /*
-      (2) get the drawing context on the canvas and define a function to transform an RGBA image to grayscale
-    */
-    var ctx = video_canvas.getContext('2d');
-    function rgba_to_grayscale(rgba, nrows, ncols) {
-      var gray = new Uint8Array(nrows*ncols);
-      for(var r=0; r<nrows; ++r)
-        for(var c=0; c<ncols; ++c)
-          // gray = 0.2*red + 0.7*green + 0.1*blue
-          gray[r*ncols + c] = (2*rgba[r*4*ncols+4*c+0]+7*rgba[r*4*ncols+4*c+1]+1*rgba[r*4*ncols+4*c+2])/10;
-      return gray;
-    }
-    /*
-      (3) this function is called each time a video frame becomes available
-    */
-    var processfn = function(video, dt, mcv) {
-      // extract canvas width, height
-      var cv_width = ctx.canvas.width;
-      var cv_height = ctx.canvas.height;
-      // render the video frame to the canvas element and extract RGBA pixel data
-
-      // every frame, draw video on canvas
-      draw_video_fn(mcv, ctx, video);
-
-      var rgba = ctx.getImageData(0, 0, cv_width, cv_height).data;
-      // prepare input to `run_cascade`
-      image = {
-        "pixels": rgba_to_grayscale(rgba, cv_height, cv_width),
-        "nrows": cv_height,
-        "ncols": cv_width,
-        "ldim": cv_width
-      }
-      params = {
-        "shiftfactor": 0.1, // move the detection window by 10% of its size
-        "minsize": min_detect_size, // minimum size of a face
-        "maxsize": 1000,    // maximum size of a face
-        "scalefactor": 1.1  // for multiscale processing: resize the detection window by 10% when moving to the higher scale
-      }
-      // run the cascade over the frame and cluster the obtained detections
-      // dets is an array that contains (r, c, s, q) quadruplets
-      // (representing row, column, scale and detection score)
-      dets = pico.run_cascade(image, facefinder_classify_region, params);
-      dets = update_memory(dets);
-      dets = pico.cluster_detections(dets, 0.2); // set IoU threshold to 0.2
-
-      // reset some stuffs
-      window.detected_faces = [];
-
-      // loop over-threshold data
-      dets.filter(function(det){
-        return det[3] > min_face_score;
-      }).forEach(function(det, i){
-        if(det[2] < min_recognize_size){
-          // only draw rect if face not big enough
-          ctx.beginPath();
-          draw_rect(ctx, det);
-        }
-        else {
-          // extract detected face to base64 string
-          var b64img = extract_face_from_canvas(ctx.canvas, det);
-
-          // keep in detected_faces
-          window.detected_faces.push(b64img);
-
-          // draw detection line
-          ctx.beginPath();
-          draw_rect(ctx, det, 'lime');
-        }
-      });
-
-      // end of each video frame
-      // fastest place to do process with detected faces
-      end_of_frame_fn(mcv, ctx, video, window.detected_faces);
-    }
-    /*
-      (4) instantiate camera handling (see https://github.com/cbrandolino/camvas)
-    */
-    var mycamvas = new camvas(ctx, processfn, { mode: mode });
-    /*
-      (5) it seems that everything went well
-    */
-    return mycamvas;
+  })
+  /*
+    (2) get the drawing context on the canvas and define a function to transform an RGBA image to grayscale
+  */
+  var ctx = video_canvas.getContext('2d');
+  function rgba_to_grayscale(rgba, nrows, ncols) {
+    var gray = new Uint8Array(nrows*ncols);
+    for(var r=0; r<nrows; ++r)
+      for(var c=0; c<ncols; ++c)
+        // gray = 0.2*red + 0.7*green + 0.1*blue
+        gray[r*ncols + c] = (2*rgba[r*4*ncols+4*c+0]+7*rgba[r*4*ncols+4*c+1]+1*rgba[r*4*ncols+4*c+2])/10;
+    return gray;
   }
+  /*
+    (3) this function is called each time a video frame becomes available
+  */
+  var processfn = function(video, dt, mcv) {
+    // extract canvas width, height
+    var cv_width = ctx.canvas.width;
+    var cv_height = ctx.canvas.height;
+    // render the video frame to the canvas element and extract RGBA pixel data
+
+    // every frame, draw video on canvas
+    draw_video_fn(mcv, ctx, video);
+
+    var rgba = ctx.getImageData(0, 0, cv_width, cv_height).data;
+    // prepare input to `run_cascade`
+    image = {
+      "pixels": rgba_to_grayscale(rgba, cv_height, cv_width),
+      "nrows": cv_height,
+      "ncols": cv_width,
+      "ldim": cv_width
+    }
+    params = {
+      "shiftfactor": 0.1, // move the detection window by 10% of its size
+      "minsize": min_detect_size, // minimum size of a face
+      "maxsize": 1000,    // maximum size of a face
+      "scalefactor": 1.1  // for multiscale processing: resize the detection window by 10% when moving to the higher scale
+    }
+    // run the cascade over the frame and cluster the obtained detections
+    // dets is an array that contains (r, c, s, q) quadruplets
+    // (representing row, column, scale and detection score)
+    dets = pico.run_cascade(image, facefinder_classify_region, params);
+    dets = update_memory(dets);
+    dets = pico.cluster_detections(dets, 0.2); // set IoU threshold to 0.2
+
+    // reset some stuffs
+    window.detected_faces = [];
+
+    // loop over-threshold data
+    dets.filter(function(det){
+      return det[3] > min_face_score;
+    }).forEach(function(det, i){
+      if(det[2] < min_recognize_size){
+        // only draw rect if face not big enough
+        ctx.beginPath();
+        draw_rect(ctx, det);
+      }
+      else {
+        // extract detected face to base64 string
+        var b64img = extract_face_from_canvas(ctx.canvas, det);
+
+        // keep in detected_faces
+        window.detected_faces.push(b64img);
+
+        // draw detection line
+        ctx.beginPath();
+        draw_rect(ctx, det, 'lime');
+      }
+    });
+
+    // end of each video frame
+    // fastest place to do process with detected faces
+    end_of_frame_fn(mcv, ctx, video, window.detected_faces);
+  }
+  /*
+    (4) instantiate camera handling (see https://github.com/cbrandolino/camvas)
+  */
+  var mycamvas = new camvas(ctx, processfn, { mode: mode });
+  /*
+    (5) it seems that everything went well
+  */
+  return mycamvas;
 }
