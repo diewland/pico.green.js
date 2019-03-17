@@ -37,14 +37,15 @@ var c2c = new Canvas2Canvas({
 
 ## Configurations
 ```javascript
-var pg = new PicoGreen({ /* config as kv here */ });
+var myCamvas = new PicoGreen({ /* config as kv here */ });
+var pr = new PicoRed({ /* config as kv here */ });
 ```
-| Name               | Description                           | Type     | Default    | Values                        |
-| ------------------ | ------------------------------------- | -------- | ---------- | ----------------------------- |
-| cascade_url        | Binary file for face detection        | String   | github url |                               |
-| min_face_score     | Face score threshold ( not percent )  | Float    | 50.0       |                               |
-| min_detect_size    | Min width to draw yellow rect (px)    | Int      | 60         |                               |
-| min_recognize_size | Min width to draw green rect (px)     | Int      | 100        |                               |
+| Name               | Description                           | Type     | Default    |
+| ------------------ | ------------------------------------- | -------- | ---------- |
+| cascade_url        | Binary file for face detection        | String   | github url |
+| min_face_score     | Face score threshold ( not percent )  | Float    | 50.0       |
+| min_detect_size    | Min width to draw yellow rect (px)    | Int      | 60         |
+| min_recognize_size | Min width to draw green rect (px)     | Int      | 100        |
 
 Camvas build-in
 
