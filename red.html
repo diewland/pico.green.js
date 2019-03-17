@@ -3,21 +3,12 @@
 <head>
 <meta charset="utf-8">
   <title>pico.red.js</title>
-  <style>
-    /*
-    canvas {
-      width: 640px;
-      height: 360px;
-      border: 1px solid black;
-    }
-    */
-  </style>
 </head>
 <body>
   <h1>pico.red.js</h1>
 
   <!-- canvas size MUST depends on myCamvas mode -->
-  <canvas width='640' height='480'></canvas>
+  <canvas></canvas>
   <canvas></canvas>
   <ol>
     <li>Render webcam on left canvas</li>
@@ -29,16 +20,14 @@
   <script src='https://tkv.io/posts/picojs-intro/demo/pico.js'></script>
   <script src='https://diewland.github.io/camvas/javascripts/camvas.js'></script>
   <script src='https://diewland.github.io/any2canvas/canvas2canvas.js'></script>
-  <script src='./pico.red.js'></script>
 
   <!-- play pico.red -->
   <script src='./pico.red.js'></script>
   <script>
 
-      // show webcam on leftcanvas
+      // show webcam on left canvas
       var ctx = document.querySelector('canvas').getContext('2d');
-      var draw = function(video, dt, cmv) { cmv.draw_img_stretch(ctx); }
-      var myCamvas = new camvas(ctx, draw, { mode: 'vga' });
+      var myCamvas = new camvas(ctx);
 
       // clone left canvas to right canvas
       // using pico red to draw right canvas
