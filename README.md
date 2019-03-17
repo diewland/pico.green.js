@@ -1,5 +1,5 @@
 # pico.green.js
-JS face detection tool, build from pico.js x camvas.js
+Inject face detection to canvas draw function
 
 ## Additional libraries
 * <a href='https://github.com/tehnokv/picojs'>pico.js</a> - face detection library
