@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+  <title>pico.red.js</title>
+  <style>
+    html, body { height: 100%; }
+    canvas { height: 80%; }
+  </style>
+</head>
+<body>
+  <h1>Detection face from photo</h1>
+
+  <input id='upload' type='file'>
+  <br><br>
+  <canvas></canvas>
+
+  <!-- require libs -->
+  <script src='https://tkv.io/posts/picojs-intro/demo/pico.js'></script>
+  <script src='./pico.red.js'></script>
+  <script>
+
+    var pr = new PicoRed({
+      last_n_frames: 1, // detect from last frame only
+    });
+
+    function readURL(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+
+          // get b64img
+          var b64img = e.target.result;
+
+          var image = new Image();
+          image.onload = function() {
+            // prepare canvas
+            var ctx = document.querySelector("canvas").getContext("2d");
+            ctx.canvas.width = image.width;
+            ctx.canvas.height = image.height;
+
+            // draw detected faces
+            pr.draw_fn(ctx, image);
+          };
+          image.src = b64img;
+
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    // bind file input
+    document.querySelector('#upload').addEventListener('change', (evt) => {
+      readURL(evt.srcElement);
+    })
+
+    // bind canvas
+    document.querySelector('canvas').addEventListener('click', () => {
+      document.querySelector('#upload').click();
+    })
+
+  </script>
+</body>
+</html>

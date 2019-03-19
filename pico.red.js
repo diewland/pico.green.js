@@ -9,6 +9,7 @@ function PicoRed(options){
   var min_recognize_size = options.min_recognize_sizse || 100; // px, start draw green rect
   var draw_video_fn      = options.draw_video_fn || function(ctx, video){ ctx.drawImage(video, 0, 0); };
   var end_of_frame_fn    = options.end_of_frame_fn || function(ctx, video, detected_faces){ /* default: do nothing */ };
+  var last_n_frames      = options.last_n_frames || 5; // use the detecions of the last 5 frames
 
   // get video canvas
   var video_canvas  = options.canvas_id
@@ -49,7 +50,7 @@ function PicoRed(options){
   /*
     (1) prepare the pico.js face detector
   */
-  var update_memory = pico.instantiate_detection_memory(5); // we will use the detecions of the last 5 frames
+  var update_memory = pico.instantiate_detection_memory(last_n_frames); // we will use the detecions of the last 5 frames
   var facefinder_classify_region = function(r, c, s, pixels, ldim) {return -1.0;};
   fetch(cascade_url).then(function(response) {
     response.arrayBuffer().then(function(buffer) {
