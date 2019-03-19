@@ -46,6 +46,7 @@ var pr = new PicoRed({ /* config as kv here */ });
 | min_face_score     | Face score threshold ( not percent )  | Float    | 50.0       |
 | min_detect_size    | Min width to draw yellow rect (px)    | Int      | 60         |
 | min_recognize_size | Min width to draw green rect (px)     | Int      | 100        |
+| last_n_frames      | use the detecions of the last N frames| Int      | 5          |
 
 Camvas build-in
 
@@ -57,7 +58,9 @@ Camvas build-in
 
 ## Demo
 
-[Green](https://diewland.github.io/pico.green.js), [Red](https://diewland.github.io/pico.green.js/red.html)
+[Green](https://diewland.github.io/pico.green.js),
+[Red](https://diewland.github.io/pico.green.js/red.html),
+[Red #2](https://diewland.github.io/pico.green.js/red_upload.html),
 
 ## TODO
 * camvas, fps support
