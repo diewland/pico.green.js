@@ -60,7 +60,7 @@ Camvas build-in
 
 [Green](https://diewland.github.io/pico.green.js),
 [Red](https://diewland.github.io/pico.green.js/red.html),
-[Red #2](https://diewland.github.io/pico.green.js/red_upload.html),
+[Red #2](https://diewland.github.io/pico.green.js/red_upload.html)
 
 ## TODO
 * camvas, fps support
