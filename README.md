@@ -45,7 +45,7 @@ var pr = new PicoRed({ /* config as kv here */ });
 | cascade_url        | Binary file for face detection        | String   | github url |
 | min_face_score     | Face score threshold ( not percent )  | Float    | 50.0       |
 | min_detect_size    | Min width to draw yellow rect (px)    | Int      | 60         |
-| min_recognize_size | Min width to draw green rect (px)     | Int      | 100        |
+| min_detect_size2   | Min width to draw green rect (px)     | Int      | 100        |
 | last_n_frames      | use the detecions of the last N frames| Int      | 5          |
 
 Camvas build-in
@@ -55,6 +55,8 @@ Camvas build-in
 | mode               | Webcam profile ( green only )         | String   | vga        | qvga, vga, hd, fullhd, 4k, 8k |
 | draw_video_fn      | run every frame: Draw video on canvas | Function | basic draw |                               |
 | end_of_frame_fn    | run every frame: After filter faces   | Function |            |                               |
+| draw_detect_fn     | run every frame: Draw detection       | Function |            |                               |
+| draw_detect_fn2    | run every frame: Draw detection #2    | Function |            |                               |
 
 ## Demo
 
