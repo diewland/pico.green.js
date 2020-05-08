@@ -2,14 +2,16 @@ function PicoGreen(options){
 
   // config
   options                = options || {};
-  var mode               = options.mode || 'vga';
+  var mode               = options.mode || 'vga';              // qvga, vga, hd, fullhd, 4k, 8k
   var cascade_url        = options.cascade_url || 'https://raw.githubusercontent.com/nenadmarkus/pico/c2e81f9d23cc11d1a612fd21e4f9de0921a5d0d9/rnt/cascades/facefinder';
   var min_face_score     = options.min_face_score || 50.0;     // score not percent
   var min_detect_size    = options.min_detect_size || 60;      // px, start draw yellow rect
-  var min_recognize_size = options.min_recognize_sizse || 100; // px, start draw green rect
+  var min_detect_size2   = options.min_detect_size2 || 100;    // px, start draw green rect
   var draw_video_fn      = options.draw_video_fn || function(mcv, ctx, video){ mcv.draw_img(ctx); };
   var end_of_frame_fn    = options.end_of_frame_fn || function(mcv, ctx, video, detected_faces){ /* default: do nothing */ };
   var last_n_frames      = options.last_n_frames || 5; // use the detecions of the last 5 frames
+  var draw_detect_fn     = options.draw_detect_fn || function(ctx, det){ draw_rect(ctx, det, 'yellow'); };
+  var draw_detect_fn2    = options.draw_detect_fn2 || function(ctx, det){ draw_rect(ctx, det, 'lime'); };
 
   // get video canvas
   var video_canvas  = options.canvas_id
@@ -110,10 +112,10 @@ function PicoGreen(options){
     dets.filter(function(det){
       return det[3] > min_face_score;
     }).forEach(function(det, i){
-      if(det[2] < min_recognize_size){
+      if(det[2] < min_detect_size2){
         // only draw rect if face not big enough
         ctx.beginPath();
-        draw_rect(ctx, det);
+        draw_detect_fn(ctx, det);
       }
       else {
         // extract detected face to base64 string
@@ -124,7 +126,7 @@ function PicoGreen(options){
 
         // draw detection line
         ctx.beginPath();
-        draw_rect(ctx, det, 'lime');
+        draw_detect_fn2(ctx, det);
       }
     });
 
