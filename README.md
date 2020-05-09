@@ -63,7 +63,9 @@ Camvas build-in
 [Green](https://diewland.github.io/pico.green.js),
 [Red](https://diewland.github.io/pico.green.js/red.html),
 [Red #2](https://diewland.github.io/pico.green.js/red_upload.html)
+[ThermoScan](https://diewland.github.io/pico.green.js/thermoscan.html)
 
 ## TODO
+* remove rect inside rect
 * camvas, fps support
 * add more examples

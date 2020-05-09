@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+  <title>Thermo Scan Mockup</title>
+  <style type='text/css'>
+    html, body {
+      padding: 0px;
+      margin: 0px;
+    }
+    canvas { 
+      position: absolute; 
+      width: 100%; 
+      height: 100%; 
+      overflow: hidden
+    }
+  </style>
+</head>
+<body>
+
+  <canvas></canvas>
+
+  <!-- require libs -->
+  <script src='https://tkv.io/posts/picojs-intro/demo/pico.js'></script>
+  <script src='https://diewland.github.io/camvas/javascripts/camvas.js'></script>
+
+  <!-- play pico.green -->
+  <script src='./pico.green.js'></script>
+  <script>
+
+    let simulate = (ctx, [ y, x, w, score ]) => {
+
+      // write text
+      ctx.font = "25px Arial";
+      ctx.fillStyle = "white";
+      ctx.fillText(`36.5 C`, x-25, y-(w/2)-10);
+
+      // draw rect
+      ctx.rect(x-(w/2), y-(w/2), w, w*1.1);
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = 'lime';
+      ctx.stroke();
+    };
+
+    var myCamvas = new PicoGreen({
+      draw_detect_fn: simulate,
+      draw_detect_fn2: simulate,
+    });
+
+  </script>
+</body>
+</html>
