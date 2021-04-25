@@ -28,12 +28,37 @@
   <script src='./pico.green.js'></script>
   <script>
 
+    // config
+    let from_temp = 365;
+    let to_temp = 370;
+    let temp_delay = 100;
+
+    // temp functions
+    function randomInteger(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    function get_temp() {
+      return randomInteger(from_temp, to_temp) / 10;
+    }
+
+    // simulate function
+    let counter = 0;
+    let temp = get_temp();
     let simulate = (ctx, [ y, x, w, score ]) => {
+
+      // generate temp
+      if (counter > temp_delay) {
+        counter = 0;
+        temp = get_temp();
+      }
+      else {
+        counter += 1;
+      }
 
       // write text
       ctx.font = "25px Arial";
       ctx.fillStyle = "white";
-      ctx.fillText(`36.5 C`, x-25, y-(w/2)-10);
+      ctx.fillText(`${temp} C`, x-25, y-(w/2)-10);
 
       // draw rect
       ctx.rect(x-(w/2), y-(w/2), w, w*1.1);
